@@ -1,0 +1,65 @@
+version: '3.0'
+name: hbot
+
+services:
+  hbot:
+    container_name: hbot-${HBOT_ID}
+    image: ${HBOT_IMAGE:-"klpanagi/hummingbot:latest"}
+    volumes:
+      - ${HOST_DOCKER}:/var/run/docker.sock
+      - hbotdata:/data
+      - hbotconf:/conf
+      - hbotlogs:/logs
+      - hbotpmmscripts:/pmm_scripts
+      - hbotscripts:/scripts
+    environment:
+      - HBOT_UID=${HBOT_ID}
+      - CONFIG_PASSWORD=${HBOT_PSK}
+      - CONFIG_FILE_NAME=${HBOT_FILE}
+      - HBOT_HAS_TUI=${HBOT_TUI}
+    # network_mode: "host"
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    restart: unless-stopped
+    environment:
+      PYTHONUNBUFFERED: 1
+    networks:
+      # - hostnet
+      - hbotnet
+    mem_limit: ${MEM_LIMIT:-1000}m
+    mem_reservation: ${MEM_RESERVATION:-100}m
+    logging:
+      options:
+        max-size: "100m"
+        max-file: 5
+
+volumes:
+  hbotdata:
+    name: hbot-${HBOT_ID}-data
+    driver: local
+    driver_opts: {}
+  hbotconf:
+    name: hbot-${HBOT_ID}-conf
+    driver: local
+    driver_opts: {}
+  hbotlogs:
+    name: hbot-${HBOT_ID}-logs
+    driver: local
+    driver_opts: {}
+  hbotscripts:
+    name: hbot-${HBOT_ID}-scripts
+    driver: local
+    driver_opts: {}
+  hbotpmmscripts:
+    name: hbot-${HBOT_ID}-pmmscripts
+    driver: local
+    driver_opts: {}
+
+networks:
+  hostnet:
+    external: true
+    name: host
+  nonet:
+    external: true
+    name: none
+  hbotnet: {}
