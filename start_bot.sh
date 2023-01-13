@@ -16,10 +16,11 @@ if [ "$HBOT_ID" == "" ]; then
     HBOT_ID=$(python  -c 'import uuid; print(uuid.uuid4())')
 fi
 
-export HBOT_IMAGE="klpanagi/hummingbot:latest"
+export HBOT_IMAGE="klpanagi/hummingbot:smartliq"
 export HBOT_COMPOSE_FILE=./hbot.compose.yml
 export HOST_DOCKER=/var/run/docker.sock
 export HBOT_ID=$HBOT_ID
+
 
 if [ ! "$(docker ps -q -f name=hbot-${HBOT_ID})" ]; then
     if [ "$(docker ps -aq -f status=exited -f name=hbot-${HBOT_ID})" ]; then
@@ -44,8 +45,7 @@ fi
 docker compose -f hbot.compose.yml run  \
     --rm                                \
     --detach                            \
-    --name                              \
-    hbot-${HBOT_ID}                     \
+    --name hbot-${HBOT_ID}              \
     hbot
 
 while true
