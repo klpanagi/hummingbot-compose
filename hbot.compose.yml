@@ -25,10 +25,8 @@ services:
       - hbot-scripts:/scripts
       - hbot-pmmscripts:/pmm_scripts
     environment:
-      - HBOT_UID=${HBOT_ID}
       - CONFIG_PASSWORD=${HBOT_PSK}
       - CONFIG_FILE_NAME=${HBOT_FILE}
-      - HBOT_HAS_TUI=${HBOT_TUI}
       - CERTS_FOLDER="/home/hummingbot/.hummingbot-gateway/certs/"
       - GATEWAY_CONF_FOLDER="/gateway-conf/"
       - GATEWAY_LOGS_FOLDER="/logs"
