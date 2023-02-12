@@ -2,18 +2,6 @@ version: '3.9'
 name: hummingbot
 
 services:
-  db:
-    image: postgres:13
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=${DB_NAME:-postgres}
-      - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - db-data:/var/lib/postgresql/data/pgdata
-
   hbot:
     container_name: hbot-${HBOT_ID}
     image: ${HBOT_IMAGE:-"hummingbot/hummingbot:latest"}
@@ -24,24 +12,25 @@ services:
       - hbot-logs:/logs
       - hbot-scripts:/scripts
       - hbot-pmmscripts:/pmm_scripts
+      - gateway-certs:/home/hummingbot/.hummingbot-gateway/certs
     environment:
       - CONFIG_PASSWORD=${HBOT_PSK}
       - CONFIG_FILE_NAME=${HBOT_FILE}
-      - CERTS_FOLDER="/home/hummingbot/.hummingbot-gateway/certs/"
-      - GATEWAY_CONF_FOLDER="/gateway-conf/"
+      - CERTS_FOLDER="/home/hummingbot/.hummingbot-gateway/certs"
+      - GATEWAY_CONF_FOLDER="/gateway-conf"
       - GATEWAY_LOGS_FOLDER="/logs"
-    # network_mode: "host"
+    network_mode: "host"
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     restart: unless-stopped
     environment:
       PYTHONUNBUFFERED: 1
-    networks:
-      # - hostnet
-      - hbotnet
+    # networks:
+      # - hbotnet
     mem_limit: ${MEM_LIMIT:-1000}m
-    mem_reservation: ${MEM_RESERVATION:-100}m
+    mem_reservation: ${MEM_RESERVATION:-300}m
     logging:
+      driver: "json-file"
       options:
         max-size: "100m"
         max-file: 5
@@ -68,17 +57,11 @@ volumes:
     driver: local
     driver_opts: {}
 
-  db-data:
-    name: db-data
+  gateway-certs:
+    name: gateway-certs
     driver: local
     driver_opts: {}
 
-
 networks:
-  hostnet:
-    external: true
-    name: host
-  nonet:
-    external: true
-    name: none
-  hbotnet: {}
+  hbotnet:
+    driver: bridge

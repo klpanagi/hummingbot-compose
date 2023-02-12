@@ -1,0 +1,56 @@
+version: '3.9'
+name: hummingbot-core
+
+services:
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${DB_NAME:-postgres}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+    networks:
+      - hbotnet
+
+  gateway:
+    image: hummingbot/gateway:latest
+    container_name: hbot-gateway
+    ports:
+      - "8080:8080"
+      - "15888:15888"
+    volumes:
+      - gateway-conf:/conf
+      - gateway-logs:/logs
+      - gateway-certs:/certs
+    environment:
+      - GATEWAY_PASSPHRASE=123
+    networks:
+      - hbotnet
+
+volumes:
+  gateway-certs:
+    name: gateway-certs
+    driver: local
+    driver_opts: {}
+  gateway-conf:
+    name: gateway-conf
+    driver: local
+    driver_opts: {}
+  gateway-logs:
+    name: gateway-logs
+    driver: local
+    driver_opts: {}
+
+  db-data:
+    name: db-data
+    driver: local
+    driver_opts: {}
+
+
+networks:
+  hbotnet:
+    driver: bridge
