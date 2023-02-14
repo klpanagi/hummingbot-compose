@@ -19,14 +19,14 @@ services:
       - CERTS_FOLDER="/home/hummingbot/.hummingbot-gateway/certs"
       - GATEWAY_CONF_FOLDER="/gateway-conf"
       - GATEWAY_LOGS_FOLDER="/logs"
-    network_mode: "host"
+    # network_mode: "host"
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     restart: unless-stopped
     environment:
       PYTHONUNBUFFERED: 1
-    # networks:
-      # - hbotnet
+    networks:
+      - hbotnet
     mem_limit: ${MEM_LIMIT:-1000}m
     mem_reservation: ${MEM_RESERVATION:-300}m
     logging:
@@ -58,10 +58,10 @@ volumes:
     driver_opts: {}
 
   gateway-certs:
-    name: gateway-certs
-    driver: local
-    driver_opts: {}
+    external: true
 
 networks:
   hbotnet:
+    name: "hbotnet"
     driver: bridge
+    external: true

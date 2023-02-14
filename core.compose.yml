@@ -4,6 +4,7 @@ name: hummingbot-core
 services:
   db:
     image: postgres:13
+    container_name: hbot-db
     ports:
       - "5432:5432"
     environment:
@@ -20,8 +21,8 @@ services:
     image: hummingbot/gateway:latest
     container_name: hbot-gateway
     ports:
-      - "8080:8080"
-      - "15888:15888"
+      - 8080:8080
+      - 15888:15888
     volumes:
       - gateway-conf:/conf
       - gateway-logs:/logs
@@ -50,7 +51,7 @@ volumes:
     driver: local
     driver_opts: {}
 
-
 networks:
   hbotnet:
+    name: "hbotnet"
     driver: bridge
