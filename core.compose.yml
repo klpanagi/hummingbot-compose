@@ -5,8 +5,8 @@ services:
   db:
     image: postgres:13
     container_name: hbot-db
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     environment:
       - POSTGRES_DB=${DB_NAME:-postgres}
       - POSTGRES_USER=${DB_USER:-postgres}
@@ -24,25 +24,32 @@ services:
       - 8080:8080
       - 15888:15888
     volumes:
-      - gateway-conf:/conf
-      - gateway-logs:/logs
-      - gateway-certs:/certs
+      - type: volume
+        source: hbot-gateway-conf
+        target: /conf
+      - type: volume
+        source: hbot-gateway-logs
+        target: /logs
+      - type: volume
+        source: hbot-gateway-certs
+        target: /certs
     environment:
       - GATEWAY_PASSPHRASE=123
+      - PORT=15888
     networks:
       - hbotnet
 
 volumes:
-  gateway-certs:
-    name: gateway-certs
+  hbot-gateway-certs:
+    name: hbot-gateway-certs
     driver: local
     driver_opts: {}
-  gateway-conf:
-    name: gateway-conf
+  hbot-gateway-conf:
+    name: hbot-gateway-conf
     driver: local
     driver_opts: {}
-  gateway-logs:
-    name: gateway-logs
+  hbot-gateway-logs:
+    name: hbot-gateway-logs
     driver: local
     driver_opts: {}
 

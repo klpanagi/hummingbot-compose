@@ -12,21 +12,21 @@ services:
       - hbot-logs:/logs
       - hbot-scripts:/scripts
       - hbot-pmmscripts:/pmm_scripts
-      - gateway-certs:/home/hummingbot/.hummingbot-gateway/certs
+      - hbot-gateway-certs:/home/hummingbot/certs
     environment:
       - CONFIG_PASSWORD=${HBOT_PSK}
       - CONFIG_FILE_NAME=${HBOT_FILE}
-      - CERTS_FOLDER="/home/hummingbot/.hummingbot-gateway/certs"
+      - CERTS_FOLDER="/home/hummingbot/certs"
       - GATEWAY_CONF_FOLDER="/gateway-conf"
       - GATEWAY_LOGS_FOLDER="/logs"
-    # network_mode: "host"
+    network_mode: "host"
+    # networks:
+    #   - hbotnet
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     restart: unless-stopped
     environment:
       PYTHONUNBUFFERED: 1
-    networks:
-      - hbotnet
     mem_limit: ${MEM_LIMIT:-1000}m
     mem_reservation: ${MEM_RESERVATION:-300}m
     logging:
@@ -57,7 +57,7 @@ volumes:
     driver: local
     driver_opts: {}
 
-  gateway-certs:
+  hbot-gateway-certs:
     external: true
 
 networks:
