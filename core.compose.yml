@@ -5,15 +5,15 @@ services:
   db:
     image: postgres:13
     container_name: hbot-db
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_DB=${DB_NAME:-postgres}
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - db-data:/var/lib/postgresql/data/pgdata
+      - hbot-db-data:/var/lib/postgresql/data/pgdata
     networks:
       - hbotnet
 
@@ -34,10 +34,68 @@ services:
         source: hbot-gateway-certs
         target: /certs
     environment:
-      - GATEWAY_PASSPHRASE=123
-      - PORT=15888
+      - GATEWAY_PASSPHRASE=${GW_PASSPHRASE:-123}
+      - PORT=${GW_PORT:-15888}
     networks:
       - hbotnet
+
+  emqx1:
+    image: emqx:5
+    restart: unless-stopped
+    container_name: hbot-emqx-1
+    environment:
+      - EMQX_NAME=emqx
+      - EMQX_HOST=node1.emqx.local
+      - EMQX_CLUSTER__DISCOVERY_STRATEGY=static
+      - EMQX_CLUSTER__STATIC__SEEDS=[emqx@node1.emqx.local]
+      - EMQX_LOADED_PLUGINS="emqx_recon,emqx_retainer,emqx_management,emqx_dashboard"
+    volumes:
+      - hbot-emqx-data:/opt/emqx/data
+      - hbot-emqx-log:/opt/emqx/log
+      - hbot-emqx-etc:/opt/emqx/etc
+    ports:
+      - "1883:1883"  # mqtt:tcp
+      - "8883:8883"  # mqtt:tcp:ssl
+      - "8083:8083"  # mqtt:ws
+      - "8084:8084"  # mqtt:ws:ssl
+      - "8081:8081"  # http:management
+      - "18083:18083"  # http:dashboard
+      - "61613:61613"  # web-stomp gateway
+    networks:
+      hbotnet:
+        aliases:
+        - node1.emqx.local
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:v2.41.0
+    container_name: hbot-prometheus
+    ports:
+      - "9090:9090"
+    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - hbot-prometheus-storage:/prometheus
+    networks:
+      hbotnet:
+        aliases:
+        - prometheus.local
+
+  grafana:
+    image: grafana/grafana:9.3.2
+    container_name: hbot-grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - hbot-grafana-storage:/var/lib/grafana
+    networks:
+      hbotnet:
+        aliases:
+        - grafana.local
 
 volumes:
   hbot-gateway-certs:
@@ -53,10 +111,27 @@ volumes:
     driver: local
     driver_opts: {}
 
-  db-data:
-    name: db-data
+  hbot-db-data:
+    name: hbot-db-data
     driver: local
     driver_opts: {}
+
+  hbot-emqx-data:
+    name: hbot-emqx-data
+    driver: local
+    driver_opts: {}
+  hbot-emqx-log:
+    name: hbot-emqx-log
+    driver: local
+    driver_opts: {}
+  hbot-emqx-etc:
+    name: hbot-emqx-etc
+    driver: local
+    driver_opts: {}
+
+  hbot-prometheus-storage: {}
+
+  hbot-grafana-storage: {}
 
 networks:
   hbotnet:
