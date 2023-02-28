@@ -6,8 +6,12 @@ Available ENV variables to configure the bot:
 - HBOT_ID: The unique ID of the bot
 - HBOT_PSK: The auth password of the bot
 - HBOT_FILE: The configuration file to load on startup
-- HBOT_TUI: Enable/Disable the TUI (Terminal-based User Interface)
 """
+
+echo -e "Available HBot instances:"
+echo -e "---------------------------------------------------"
+docker container ls -a --format 'table {{.Names}}\t{{.State}}\t{{.Status}}' | grep hbot
+echo -e "---------------------------------------------------"
 
 if [ -z $HBOT_ID ]; then
     read -p "[*] Enter hbot ID --> " HBOT_ID
