@@ -20,9 +20,6 @@ if [ "$HBOT_ID" == "" ]; then
     HBOT_ID=$(python  -c 'import uuid; print(uuid.uuid4())')
 fi
 
-export HBOT_IMAGE="klpanagi/hummingbot:latest"
-export HBOT_COMPOSE_FILE=./hbot.compose.yml
-export HOST_DOCKER=/var/run/docker.sock
 export HBOT_ID=$HBOT_ID
 
 
@@ -47,7 +44,6 @@ else
 fi
 
 docker compose -f hbot.compose.yml run  \
-    --rm                                \
     --detach                            \
     --name hbot-${HBOT_ID}              \
     hbot
