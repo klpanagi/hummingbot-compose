@@ -21,21 +21,20 @@ services:
     image: hummingbot/gateway:latest
     container_name: hbot-gateway
     ports:
-      - 8080:8080
-      - 15888:15888
+      - ${GW_DOCS_PORT:-8080}:8080
+      - ${GW_PORT:-15888}:15888
     volumes:
       - type: volume
         source: hbot-gateway-conf
-        target: /conf
+        target: /usr/src/app/conf
       - type: volume
         source: hbot-gateway-logs
-        target: /logs
+        target: /usr/src/app/logs
       - type: volume
         source: hbot-gateway-certs
-        target: /certs
+        target: /usr/src/app/certs
     environment:
       - GATEWAY_PASSPHRASE=${GW_PASSPHRASE:-123}
-      - PORT=${GW_PORT:-15888}
     networks:
       - hbotnet
 
