@@ -38,6 +38,17 @@ services:
     networks:
       - hbotnet
 
+  streanlitapp:
+    image: hummingbot/streamlit-app
+    restart: unless-stopped
+    container_name: streanlit-app
+    ports:
+      - "8501:8501"
+    networks:
+      hbotnet:
+        aliases:
+        - streamlit-app.local
+
   emqx1:
     image: emqx:5
     restart: unless-stopped
