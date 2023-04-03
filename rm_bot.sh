@@ -8,7 +8,9 @@ if [ "$HBOT_ID" == "" ]; then
     exit
 fi
 
+echo "[*] - Removing container..."
 docker container rm hbot-${HBOT_ID}
+echo "[*] - Removing volumes..."
 docker volume rm                \
     hbot-${HBOT_ID}-data        \
     hbot-${HBOT_ID}-conf        \

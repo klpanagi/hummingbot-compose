@@ -19,14 +19,13 @@ services:
       - CERTS_FOLDER="/home/hummingbot/certs"
       - GATEWAY_CONF_FOLDER="/gateway-conf"
       - GATEWAY_LOGS_FOLDER="/logs"
+      - PYTHONUNBUFFERED=1
     network_mode: "host"
     # networks:
     #   - hbotnet
     stdin_open: true # docker run -i
     tty: true        # docker run -t
     restart: unless-stopped
-    environment:
-      PYTHONUNBUFFERED: 1
     mem_limit: ${MEM_LIMIT:-1000}m
     mem_reservation: ${MEM_RESERVATION:-300}m
     logging:
