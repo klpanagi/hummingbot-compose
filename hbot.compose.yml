@@ -9,6 +9,7 @@ services:
       - ${HOST_DOCKER}:/var/run/docker.sock
       - hbot-data:/data
       - hbot-conf:/conf
+      - hbot-conf-connectors:/conf/connectors
       - hbot-logs:/logs
       - hbot-scripts:/scripts
       - hbot-pmmscripts:/pmm_scripts
@@ -58,6 +59,14 @@ volumes:
 
   hbot-gateway-certs:
     external: true
+
+  # hbot-conf-connectors:
+  #   external: true
+
+  hbot-conf-connectors:
+    name: hbot-conf-connectors
+    driver: local
+    driver_opts: {}
 
 networks:
   hbotnet:
