@@ -107,6 +107,35 @@ services:
         aliases:
         - grafana.local
 
+  tradingview-mqtt-bridge:
+    image: klpanagi/tradingview-mqtt-bridge:latest
+    container_name: tradingview-mqtt-bridge
+    restart: unless-stopped
+    depends_on:
+      emqx1:
+        condition: service_healthy
+        restart: true
+    ports:
+      - '80:8080'
+    environment:
+      - SEC_KEY=${SEC_KEY:-123123}
+      - MQTT_HOST=node1.emqx.local
+      - MQTT_PORT=1883
+      - MQTT_USERNAME=
+      - MQTT_PASSWORD=
+      - MQTT_TOPIC=tradingview/alerts
+    command: [
+      "uvicorn",
+      "app:app",
+      "--workers", "4",
+      "--host", "0.0.0.0",
+      "--port", "8080",
+      '--root-path', '/']
+    networks:
+      hbotnet:
+        aliases:
+        - tv-mqtt-bridge.local
+
 volumes:
   hbot-gateway-certs:
     name: hbot-gateway-certs
