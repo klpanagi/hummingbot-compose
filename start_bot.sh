@@ -1,60 +1,96 @@
 #!/usr/bin/env bash
+#
+set -e
+set -o pipefail
 
-echo """
-Available ENV variables to configure the bot:
----------------------------------------------
-- HBOT_ID: The unique ID of the bot
-- HBOT_PSK: The auth password of the bot
-- HBOT_FILE: The configuration file to load on startup
-"""
+CONTAINER_PREFIX="hbot-"
+COMPOSE_FILE_NAME="hbot.compose.yml"
 
-echo -e "Available HBot instances:"
-echo -e "---------------------------------------------------"
-docker container ls -a --format 'table {{.Names}}\t{{.State}}\t{{.Status}}' | grep hbot
-echo -e "---------------------------------------------------"
+help()
+{
+    echo "
+Usage: ./start_bot.sh [ -n | --id ]
+                      [ -p | --psk ]
+                      [ -f | --strategy-file ]
+                      [ -d | --detach ]
+                      [ -h | --help  ]"
+    exit 2
+}
+
+SHORT=n:,p:,f:,d:,h
+LONG=id:,psk:,strategy-file:,detach,help
+OPTS=$(getopt -a -n start_bot.sh --options $SHORT --longoptions $LONG -- "$@")
+
+VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
+
+if [ "$VALID_ARGUMENTS" -eq 0 ]; then
+  help
+fi
+
+eval set -- "$OPTS"
+
+while :
+do
+  case "$1" in
+    -n | --id )
+      HBOT_ID="$2"
+      shift 2
+      ;;
+    -p | --psk )
+      HBOT_PSK="$2"
+      shift 2
+      ;;
+    -f | --strategy-file )
+      HBOT_FILE="$2"
+      shift 2
+      ;;
+    -d | --detach )
+      DETACH=1
+      shift;
+      ;;
+    -h | --help)
+      help
+      ;;
+    --)
+      shift;
+      break
+      ;;
+    *)
+      echo "Unexpected option: $1"
+      help
+      ;;
+  esac
+done
 
 if [ -z $HBOT_ID ]; then
-    read -p "[*] Enter hbot ID --> " HBOT_ID
+    HBOT_ID=$(python  -c 'import uuid; print(uuid.uuid4())')
 fi
 if [ "$HBOT_ID" == "" ]; then
     HBOT_ID=$(python  -c 'import uuid; print(uuid.uuid4())')
 fi
 
-export HBOT_ID=$HBOT_ID
+CONTAINER_NAME=${CONTAINER_PREFIX}${HBOT_ID}
 
+echo "Creating hbot container with parameters:"
+echo "- id: ${HBOT_ID}"
+echo "- psk: ${HBOT_PSK}"
+echo "- strategy_file: ${HBOT_FILE}"
+echo "- detach: ${DETACH}"
 
-if [ ! "$(docker ps -q -f name=hbot-${HBOT_ID})" ]; then
-    if [ "$(docker ps -aq -f status=exited -f name=hbot-${HBOT_ID})" ]; then
-        # cleanup
-        echo "[*] Instance hbot-${HBOT_ID} exists but exited. Removing..."
-        docker rm hbot-${HBOT_ID}
-    fi
-else
-    while true
-    do
-        read -p \
-            "[*] Instance hbot-${HBOT_ID} is running. Do you want to kill first? (y/n/Y/N) " \
-            attach
-        case "$attach" in
-          n|N) exit;;
-          y|Y) docker kill hbot-${HBOT_ID}; break;;
-          *) echo 'Response not valid';;
-        esac
-    done
+if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
+    echo "[*] Instance ${CONTAINER_NAME} already running."
+    exit 1
 fi
 
-docker compose -f hbot.compose.yml run  \
-    --detach                            \
-    --name hbot-${HBOT_ID}              \
+if [ ! -z $DETACH ]; then
+    DETACH_CONTAINER="--detach"
+else
+    DETACH_CONTAINER=""
+fi
+
+HBOT_ID=${HBOT_ID} HBOT_PSK=${HBOT_PSK} HBOT_FILE=${HBOT_FILE}  \
+    docker compose -f ${COMPOSE_FILE_NAME} run                  \
+    --rm                                                        \
+    ${DETACH_CONTAINER}                                         \
+    --name ${CONTAINER_NAME}                                    \
     hbot
-
-while true
-do
-    read -p "[*] Attach to the hbot-${HBOT_ID} instance? (y/n/Y/N) " attach
-    case "$attach" in
-      n|N) break;;
-      y|Y) docker attach "hbot-${HBOT_ID}"; break;;
-      *) echo 'Response not valid';;
-    esac
-done
-

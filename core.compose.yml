@@ -5,6 +5,7 @@ services:
   db:
     image: postgres:13
     container_name: hbot-db
+    restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
@@ -16,10 +17,12 @@ services:
       - hbot-db-data:/var/lib/postgresql/data/pgdata
     networks:
       - hbotnet
+    profiles: ['db', 'all']
 
   gateway:
     image: hummingbot/gateway:latest
     container_name: hbot-gateway
+    restart: unless-stopped
     ports:
       - ${GW_DOCS_PORT:-8080}:8080
       - ${GW_PORT:-15888}:15888
@@ -37,17 +40,19 @@ services:
       - GATEWAY_PASSPHRASE=${GW_PASSPHRASE:-123}
     networks:
       - hbotnet
+    profiles: ['gateway', 'all']
 
   streanlitapp:
     image: hummingbot/streamlit-app
-    restart: unless-stopped
     container_name: streanlit-app
+    restart: unless-stopped
     ports:
       - "8501:8501"
     networks:
       hbotnet:
         aliases:
         - streamlit-app.local
+    profiles: ['analysis', 'all']
 
   emqx1:
     image: emqx:5
@@ -80,10 +85,12 @@ services:
       interval: 5s
       timeout: 25s
       retries: 5
+    profiles: ['mqtt', 'all']
 
   prometheus:
     image: prom/prometheus:v2.41.0
     container_name: hbot-prometheus
+    restart: unless-stopped
     ports:
       - "9090:9090"
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
@@ -94,10 +101,12 @@ services:
       hbotnet:
         aliases:
         - prometheus.local
+    profiles: ['obs', 'all']
 
   grafana:
     image: grafana/grafana:9.3.2
     container_name: hbot-grafana
+    restart: unless-stopped
     ports:
       - "3000:3000"
     volumes:
@@ -106,6 +115,7 @@ services:
       hbotnet:
         aliases:
         - grafana.local
+    profiles: ['obs', 'all']
 
   tradingview-mqtt-bridge:
     image: klpanagi/tradingview-mqtt-bridge:latest
@@ -135,6 +145,7 @@ services:
       hbotnet:
         aliases:
         - tv-mqtt-bridge.local
+    profiles: ['tradingview', 'all']
 
 volumes:
   hbot-gateway-certs:
@@ -169,7 +180,6 @@ volumes:
     driver_opts: {}
 
   hbot-prometheus-storage: {}
-
   hbot-grafana-storage: {}
 
 networks:
