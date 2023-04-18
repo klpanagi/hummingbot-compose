@@ -42,6 +42,47 @@ consume alerts and implement and high-level logic for executing orders based on
 event data. For more information about how to use this component can be found
 [here](https://github.com/klpanagi/tradingview-webhook-mqtt).
 
+```
+Starting Hummingbot Core...
+
+    Gateway Parameters:
+    - Image:
+    - Port: 15888
+    - Passphrase: 123
+
+    Gateway Parameters:
+    - Image:
+    - Port: 15888
+    - Passphrase: 123
+
+    PostgresDB Parameters:
+    - Image: postgres:13
+    - Name: postgres
+    - User: postgres
+    - Password: postgres
+
+    Grafana Parameters:
+    - Image: grafana/grafana:9.3.2
+
+    TradingView Bridge Parameters:
+    - Image: klpanagi/tradingview-mqtt-bridge:latest
+    - Security Key: 123123
+    - MQTT Topic: tradingview/alerts
+
+    Streamlit App Parameters:
+    - Image: hummingbot/streamlit-app:latest
+    - Port: 8501
+
+[+] Running 7/0
+ ✔ Container hbot-gateway             Created
+ ✔ Container hbot-emqx-1              Created
+ ✔ Container hbot-db                  Created
+ ✔ Container hbot-grafana             Created
+ ✔ Container hbot-prometheus          Created
+ ✔ Container streanlit-app            Created
+ ✔ Container tradingview-mqtt-bridge  Created
+```
+
 The `start_core.sh` script uses the `core.compsoe.yml` compose deployment file 
 to configure and manage deployments based on given flags.
 
@@ -65,6 +106,8 @@ Flags:
 - `--no-analysis`: Exclude analysis tools
 - `--no-tv`: Exclude tradingview integration tools
 - `--no-obs`: Exclude observability stack (Prometheus + Grafana)
+
+
 
 ### Start Bot
 

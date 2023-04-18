@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-#
+
 set -e
 set -o pipefail
 
 CONTAINER_PREFIX="hbot-"
 COMPOSE_FILE_NAME="hbot.compose.yml"
+ENV_FILE=".env"
 
 help()
 {
@@ -71,11 +72,24 @@ fi
 
 CONTAINER_NAME=${CONTAINER_PREFIX}${HBOT_ID}
 
-echo "Creating hbot container with parameters:"
-echo "- id: ${HBOT_ID}"
-echo "- psk: ${HBOT_PSK}"
-echo "- strategy_file: ${HBOT_FILE}"
-echo "- detach: ${DETACH}"
+set -o allexport
+source $ENV_FILE
+set +o allexport
+
+echo """
+Creating hbot container with
+
+    Bot Parameters:
+    - Id: ${HBOT_ID}
+    - Passphrase: ${HBOT_PSK}
+    - Strategy file: ${HBOT_FILE}
+    - Detach: ${DETACH}
+
+    Deployment Parameters:
+    - Gateway Image: ${GW_HOST}
+    - Gateway Host: ${GW_HOST}
+    - Gateway Port: ${GW_PORT}
+"""
 
 if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
     echo "[*] Instance ${CONTAINER_NAME} already running."

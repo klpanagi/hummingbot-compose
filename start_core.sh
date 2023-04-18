@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 COMPOSE_FILENAME="core.compose.yml"
+ENV_FILE=".env"
 
 help()
 {
@@ -84,6 +85,40 @@ fi
 if [ -z $EXCLUDE_TRADINGVIEW ]; then
  PROFILES="${PROFILES} --profile tradingview"
 fi
+
+set -o allexport
+source $ENV_FILE
+set +o allexport
+
+echo """
+Starting Hummingbot Core...
+
+    Gateway Parameters:
+    - Image: ${GW_IMAGE}
+    - Port: ${GW_PORT}
+    - Passphrase: ${GW_PASSPHRASE}
+
+    MQTT Parameters:
+    - Image: ${MQTT_IMAGE}
+
+    PostgresDB Parameters:
+    - Image: ${DB_IMAGE}
+    - Name: ${DB_NAME}
+    - User: ${DB_USER}
+    - Password: ${DB_PASSWORD}
+
+    Grafana Parameters:
+    - Image: ${GRAFANA_IMAGE}
+
+    TradingView Bridge Parameters:
+    - Image: ${TV_BRIDGE_IMAGE}
+    - Security Key: ${TV_BRIDGE_SEC_KEY}
+    - MQTT Topic: ${TV_BRIDGE_MQTT_TOPIC}
+
+    Streamlit App Parameters:
+    - Image: ${STREAMLIT_APP_IMAGE}
+    - Port: ${STREAMLIT_APP_PORT}
+"""
 
 docker compose -f ${COMPOSE_FILENAME} down &&   \
     docker compose -f ${COMPOSE_FILENAME}       \

@@ -2,6 +2,7 @@
 
 CONTAINER_PREFIX="hbot-"
 COMPOSE_FILE_NAME="hbot.compose.yml"
+ENV_FILE=".env"
 
 help()
 {
@@ -50,5 +51,9 @@ if [ -z $HBOT_ID ]; then
 fi
 
 CONTAINER_NAME="${CONTAINER_PREFIX}${HBOT_ID}"
+
+set -o allexport
+source $ENV_FILE
+set +o allexport
 
 docker container stop ${CONTAINER_NAME}
