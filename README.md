@@ -203,7 +203,9 @@ hbot-mybot1-pmmscripts
 List available bots
 
 ```bash
+[I] ➜ ./ls_bots.sh -h
 
+Usage: ./ls_bots.sh [ -h | --help  ]
 ```
 
 **Options**:
