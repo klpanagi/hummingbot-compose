@@ -46,14 +46,12 @@ event data. For more information about how to use this component can be found
 Starting Hummingbot Core...
 
     Gateway Parameters:
-    - Image:
+    - Image: hummingbot/gateway:latest
     - Port: 15888
     - Passphrase: 123
-
-    Gateway Parameters:
-    - Image:
-    - Port: 15888
-    - Passphrase: 123
+    
+    MQTT Parameters:
+    - Image: emqx:5
 
     PostgresDB Parameters:
     - Image: postgres:13
