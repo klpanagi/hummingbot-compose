@@ -99,7 +99,7 @@ Starting Hummingbot Core...
     - Passphrase: ${GW_PASSPHRASE}
 
     MQTT Parameters:
-    - Image: ${MQTT_IMAGE}
+    - Image: ${MQTT_EMQX_IMAGE}
 
     PostgresDB Parameters:
     - Image: ${DB_IMAGE}
