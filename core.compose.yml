@@ -95,7 +95,7 @@ services:
       - 9090:9090
     command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - hbot-prometheus-storage:/prometheus
     networks:
       hbotnet:

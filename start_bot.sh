@@ -86,9 +86,9 @@ Creating hbot container with
     - Detach: ${DETACH}
 
     Deployment Parameters:
-    - Gateway Image: ${GW_HOST}
-    - Gateway Host: ${GW_HOST}
-    - Gateway Port: ${GW_PORT}
+    - Image: ${HBOT_IMAGE}
+    - Memory Limit (Mb): ${HBOT_MEM_LIMIT}
+    - Memory Reservation (Mb): ${HBOT_MEM_RESERVATION}
 """
 
 if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
