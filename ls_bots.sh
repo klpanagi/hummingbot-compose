@@ -4,13 +4,13 @@ CONTAINER_PREFIX="hbot-"
 
 help()
 {
-    echo "Usage: ./ls_bots.sh [ -h | --help  ]"
+    echo "Usage: ./ls_bots.sh [ -h | --help ]"
     exit 2
 }
 
 SHORT=h
 LONG=help
-OPTS=$(getopt -a -n rm_bot.sh --options $SHORT --longoptions $LONG -- "$@")
+OPTS=$(getopt -a -n ls_bots.sh --options $SHORT --longoptions $LONG -- "$@")
 
 VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
 
