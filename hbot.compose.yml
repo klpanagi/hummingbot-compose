@@ -8,9 +8,11 @@ services:
     volumes:
       - hbot-data:/data
       - hbot-conf:/conf
-      - hbot-conf-connectors:/conf/connectors
+      - hbot-connectors-global:/conf/connectors
+      - hbot-strategies-global:/conf/strategies
       - hbot-logs:/logs
-      - hbot-scripts:/scripts
+      # - hbot-scripts:/scripts
+      - hbot-scripts-global:/scripts
       - hbot-pmmscripts:/pmm_scripts
       - hbot-gateway-certs:/home/hummingbot/certs
     environment:
@@ -56,8 +58,18 @@ volumes:
     driver: local
     driver_opts: {}
 
-  hbot-conf-connectors:
+  hbot-connectors-global:
     name: hbot-conf-connectors
+    driver: local
+    driver_opts: {}
+
+  hbot-strategies-global:
+    name: hbot-conf-strategies
+    driver: local
+    driver_opts: {}
+
+  hbot-scripts-global:
+    name: hbot-conf-scripts
     driver: local
     driver_opts: {}
 
