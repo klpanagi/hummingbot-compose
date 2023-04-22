@@ -13,8 +13,8 @@ DB_PASSWORD=postgres
 ## Hummingbot instances
 HBOT_IMAGE="hummingbot/hummingbot:latest"
 HBOT_COMPOSE_FILE=./hbot.compose.yml
-HBOT_MEM_LIMIT=1000m
-HBOT_MEM_RESERVATION=300m
+HBOT_MEM_LIMIT=1000
+HBOT_MEM_RESERVATION=300
 
 ## Grafana
 GRAFANA_IMAGE="grafana/grafana:9.3.2"
