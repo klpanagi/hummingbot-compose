@@ -217,3 +217,28 @@ Example usage:
 
 hbot-mybot1
 ```
+
+### Get Bot Database
+
+Retrieve the database files (sqlite + csv) of a bot given its ID
+
+```bash
+[I] ➜ ./get_bot_db.sh -h                  
+
+Usage: ./get_bot_db.sh [ -n | --id ]
+                       [ -o | --outdir ]
+                       [ -h | --help ]
+```
+
+**Options**:
+
+- `-n | --id`: The id of the bot
+- `-o | --outdir`: Output directory to store sqlite + csv files
+- `-h | --help`: Prints help message and exits
+
+Example usage:
+
+```bash
+[I] ➜ ./get_bot_db.sh --id mybot2 -o mybot2-data
+Successfully copied 126.5kB to ~/hummingbot-compose/mybot2-data
+```
