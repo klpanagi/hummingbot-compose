@@ -6,13 +6,13 @@ services:
     container_name: hbot-${HBOT_ID}
     image: ${HBOT_IMAGE:-"hummingbot/hummingbot:latest"}
     volumes:
-      - hbot-data:/data
-      - hbot-conf:/conf
-      - hbot-connectors-global:/conf/connectors
-      - hbot-strategies-global:/conf/strategies
+      - hbot-data:/home/hummingbot/data
+      - hbot-conf:/home/hummingbot/conf
+      - hbot-connectors-global:/home/hummingbot/conf/connectors
+      - hbot-strategies-global:/home/hummingbot/conf/strategies
       - hbot-logs:/logs
-      # - hbot-scripts:/scripts
-      - hbot-scripts-global:/scripts
+      # - hbot-scripts:/home/hummingbot/conf/scripts
+      - hbot-scripts-global:/home/hummingbot/scripts
       - hbot-pmmscripts:/pmm_scripts
       - hbot-gateway-certs:/home/hummingbot/certs
     environment:
