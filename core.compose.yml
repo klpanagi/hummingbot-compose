@@ -29,30 +29,21 @@ services:
     volumes:
       - type: volume
         source: hbot-gateway-conf
-        target: /usr/src/app/conf
+        target: /home/gateway/conf
       - type: volume
         source: hbot-gateway-logs
-        target: /usr/src/app/logs
+        target: /home/gateway/logs
       - type: volume
         source: hbot-gateway-certs
-        target: /usr/src/app/certs
+        target: /home/gateway/certs
+      - type: volume
+        source: hbot-gateway-db
+        target: /home/gateway/db
     environment:
       - GATEWAY_PASSPHRASE=${GW_PASSPHRASE:-123}
     networks:
       - hbotnet
     profiles: ['gateway', 'all']
-
-  streanlitapp:
-    image: ${STREAMLIT_APP_IMAGE:-"hummingbot/streamlit-app:latest"}
-    container_name: streanlit-app
-    restart: unless-stopped
-    ports:
-      - ${STREAMLIT_APP_PORT:-8501}:8501
-    networks:
-      hbotnet:
-        aliases:
-        - streamlit-app.local
-    profiles: ['analysis', 'all']
 
   emqx1:
     image: ${MQTT_EMQX_IMAGE:-emqx:5}
@@ -87,36 +78,6 @@ services:
       retries: 5
     profiles: ['mqtt', 'all']
 
-  prometheus:
-    image: prom/prometheus:v2.41.0
-    container_name: hbot-prometheus
-    restart: unless-stopped
-    ports:
-      - 9090:9090
-    command: --web.enable-lifecycle --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - hbot-prometheus-storage:/prometheus
-    networks:
-      hbotnet:
-        aliases:
-        - prometheus.local
-    profiles: ['obs', 'all']
-
-  grafana:
-    image: ${GRAFANA_IMAGE:-grafana/grafana:9.3.2}
-    container_name: hbot-grafana
-    restart: unless-stopped
-    ports:
-      - ${GRAFANA_DASHBOARD_PORT:-3000}:3000
-    volumes:
-      - hbot-grafana-storage:/var/lib/grafana
-    networks:
-      hbotnet:
-        aliases:
-        - grafana.local
-    profiles: ['obs', 'all']
-
   tradingview-mqtt-bridge:
     image: ${TV_BRIDGE_IMAGE:-klpanagi/tradingview-mqtt-bridge:latest}
     container_name: tradingview-mqtt-bridge
@@ -126,7 +87,7 @@ services:
         condition: service_healthy
         restart: true
     ports:
-      - '80:8080'
+      - '8082:8080'
     environment:
       - SEC_KEY=${TV_BRIDGE_SEC_KEY:-123123}
       - MQTT_HOST=node1.emqx.local
@@ -137,10 +98,10 @@ services:
     command: [
       "uvicorn",
       "app:app",
-      "--workers", "4",
+      "--workers", "${TV_BRIDGE_WORKERS:-2}",
       "--host", "0.0.0.0",
       "--port", "8080",
-      '--root-path', '/']
+      '--root-path', '']
     networks:
       hbotnet:
         aliases:
@@ -158,6 +119,10 @@ volumes:
     driver_opts: {}
   hbot-gateway-logs:
     name: hbot-gateway-logs
+    driver: local
+    driver_opts: {}
+  hbot-gateway-db:
+    name: hbot-gateway-db
     driver: local
     driver_opts: {}
 
@@ -178,9 +143,6 @@ volumes:
     name: hbot-emqx-etc
     driver: local
     driver_opts: {}
-
-  hbot-prometheus-storage: {}
-  hbot-grafana-storage: {}
 
 networks:
   hbotnet:
