@@ -6,7 +6,7 @@ services:
     container_name: hbot-${HBOT_ID}
     image: ${HBOT_IMAGE:-"hummingbot/hummingbot:latest"}
     volumes:
-      - hbot-conf:/home/hummingbot/home/hummingbot/conf
+      - hbot-conf:/home/hummingbot/conf
       - hbot-connectors-global:/home/hummingbot/conf/connectors
       - hbot-strategies-global:/home/hummingbot/conf/strategies
       - hbot-logs:/home/hummingbot/logs

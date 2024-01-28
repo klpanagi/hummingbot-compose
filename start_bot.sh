@@ -93,15 +93,6 @@ Creating hbot container with
 
 if [ "$(docker ps -q -f name=${CONTAINER_NAME})" ]; then
     echo "[*] Instance ${CONTAINER_NAME} already running."
-# HBOT_ID=${HBOT_ID} HBOT_PSK=${HBOT_PSK} HBOT_FILE=${HBOT_FILE}  \
-#     docker compose -f ${COMPOSE_FILE_NAME} kill                  \
-#     --name dashboard-${CONTAINER_NAME}                                    \
-#     dashboard
-# HBOT_ID=${HBOT_ID} HBOT_PSK=${HBOT_PSK} HBOT_FILE=${HBOT_FILE}  \
-#     docker compose -f ${COMPOSE_FILE_NAME} kill                  \
-#     --name ${CONTAINER_NAME}                                    \
-#     hbot
-    # exit 1
 fi
 
 if [ ! -z $DETACH ]; then
@@ -110,15 +101,9 @@ else
     DETACH_CONTAINER=""
 fi
 
-# HBOT_ID=${HBOT_ID} HBOT_PSK=${HBOT_PSK} HBOT_FILE=${HBOT_FILE}  \
-#     docker compose -f ${COMPOSE_FILE_NAME} run                  \
-#     --rm                                                        \
-#     --detach                                                        \
-#     --name dashboard-${CONTAINER_NAME}                                    \
-#     dashboard
 
 HBOT_ID=${HBOT_ID} HBOT_PSK=${HBOT_PSK} HBOT_FILE=${HBOT_FILE}  \
-    docker compose -f ${COMPOSE_FILE_NAME} run                  \
+    docker compose -f ./compose/${COMPOSE_FILE_NAME} run        \
     --rm                                                        \
     ${DETACH_CONTAINER}                                         \
     --name ${CONTAINER_NAME}                                    \

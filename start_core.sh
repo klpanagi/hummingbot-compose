@@ -120,7 +120,7 @@ Starting Hummingbot Core...
     - Port: ${STREAMLIT_APP_PORT}
 """
 
-docker compose -f ${COMPOSE_FILENAME} down &&   \
-    docker compose -f ${COMPOSE_FILENAME}       \
+docker compose -f ./compose/${COMPOSE_FILENAME} down &&   \
+    docker compose -f ./compose/${COMPOSE_FILENAME}       \
     ${PROFILES}                                 \
     up --remove-orphans
