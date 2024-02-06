@@ -76,6 +76,6 @@ volumes:
 
 networks:
   hbotnet:
-    name: "hbotnet"
+    name: hbotnet
     driver: bridge
     external: true

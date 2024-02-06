@@ -42,7 +42,9 @@ services:
     environment:
       - GATEWAY_PASSPHRASE=${GW_PASSPHRASE:-123}
     networks:
-      - hbotnet
+      hbotnet:
+        aliases:
+        - gateway.local
     profiles: ['gateway', 'all']
 
   emqx1:
@@ -75,7 +77,7 @@ services:
       test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
       interval: 5s
       timeout: 25s
-      retries: 5
+      retries: 10
     profiles: ['mqtt', 'all']
 
   tradingview-mqtt-bridge:
@@ -107,6 +109,20 @@ services:
         aliases:
         - tv-mqtt-bridge.local
     profiles: ['tradingview', 'all']
+
+  dashboard:
+    container_name: dashboard
+    image: hummingbot/dashboard:latest
+    restart: unless-stopped
+    networks:
+      hbotnet:
+        aliases:
+        - dashboard.local
+    volumes:
+      - ./hummingbot_files/data:/home/dashboard/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8501:8501
 
 volumes:
   hbot-gateway-certs:
@@ -146,5 +162,5 @@ volumes:
 
 networks:
   hbotnet:
-    name: "hbotnet"
+    name: hbotnet
     driver: bridge

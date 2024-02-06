@@ -98,7 +98,7 @@ Starting Hummingbot Core...
     - Port: ${GW_PORT}
     - Passphrase: ${GW_PASSPHRASE}
 
-    MQTT Parameters:
+    MQTT Broker Parameters:
     - Image: ${MQTT_EMQX_IMAGE}
 
     PostgresDB Parameters:
@@ -107,20 +107,19 @@ Starting Hummingbot Core...
     - User: ${DB_USER}
     - Password: ${DB_PASSWORD}
 
-    Grafana Parameters:
-    - Image: ${GRAFANA_IMAGE}
-
     TradingView Bridge Parameters:
     - Image: ${TV_BRIDGE_IMAGE}
     - Security Key: ${TV_BRIDGE_SEC_KEY}
     - MQTT Topic: ${TV_BRIDGE_MQTT_TOPIC}
 
-    Streamlit App Parameters:
-    - Image: ${STREAMLIT_APP_IMAGE}
-    - Port: ${STREAMLIT_APP_PORT}
+    Dashboard Parameters:
+    - Image: ${DASHBOARD_IMAGE}
+    - Port: ${DASHBOARD_PORT}
 """
 
-docker compose -f ./compose/${COMPOSE_FILENAME} down &&   \
-    docker compose -f ./compose/${COMPOSE_FILENAME}       \
-    ${PROFILES}                                 \
-    up --remove-orphans
+# docker compose -f ./compose/${COMPOSE_FILENAME} down &&   \
+#     docker compose -f ./compose/${COMPOSE_FILENAME}       \
+#     ${PROFILES}                                 \
+#     up --remove-orphans
+
+docker compose -f ./compose/${COMPOSE_FILENAME} ${PROFILES} up --remove-orphans

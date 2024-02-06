@@ -26,8 +26,8 @@ TV_BRIDGE_SEC_KEY=123123
 TV_BRIDGE_MQTT_TOPIC="tradingview/alerts"
 
 # Streamlit App
-STREAMLIT_APP_IMAGE="hummingbot/streamlit-app:latest"
-STREAMLIT_APP_PORT=8501
+DASHBOARD_IMAGE="hummingbot/dashboard:latest"
+DASHBOARD_PORT=8501
 
 # MQTT EMQX Broker
 MQTT_EMQX_IMAGE="emqx:5"
