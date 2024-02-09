@@ -2,6 +2,7 @@ version: '3.9'
 name: hummingbot-core
 
 services:
+
   db:
     image: ${DB_IMAGE:-postgres:13}
     container_name: hbot-db
@@ -111,8 +112,8 @@ services:
     profiles: ['tradingview', 'all']
 
   dashboard:
-    container_name: dashboard
     image: hummingbot/dashboard:latest
+    container_name: hbot-dashboard
     restart: unless-stopped
     networks:
       hbotnet:
@@ -123,6 +124,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8501:8501
+    profiles: ['dashboard', 'all']
 
 volumes:
   hbot-gateway-certs:

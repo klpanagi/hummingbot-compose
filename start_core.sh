@@ -28,7 +28,7 @@ while :
 do
   case "$1" in
     --no-analysis )
-      EXCLUDE_ANALYSIS=1
+      EXCLUDE_DASHBOARD=1
       shift;
       ;;
     --no-db )
@@ -37,10 +37,6 @@ do
       ;;
     --no-gw )
       EXCLUDE_GATEWAY=1
-      shift;
-      ;;
-    --no-obs )
-      EXCLUDE_OBS=1
       shift;
       ;;
     --no-mqtt )
@@ -76,11 +72,8 @@ fi
 if [ -z $EXCLUDE_MQTT ]; then
  PROFILES="${PROFILES} --profile mqtt"
 fi
-if [ -z $EXCLUDE_OBS ]; then
- PROFILES="${PROFILES} --profile obs"
-fi
-if [ -z $EXCLUDE_ANALYSIS ]; then
- PROFILES="${PROFILES} --profile analysis"
+if [ -z $EXCLUDE_DASHBOARD ]; then
+ PROFILES="${PROFILES} --profile dashboard"
 fi
 if [ -z $EXCLUDE_TRADINGVIEW ]; then
  PROFILES="${PROFILES} --profile tradingview"
@@ -117,9 +110,8 @@ Starting Hummingbot Core...
     - Port: ${DASHBOARD_PORT}
 """
 
-# docker compose -f ./compose/${COMPOSE_FILENAME} down &&   \
-#     docker compose -f ./compose/${COMPOSE_FILENAME}       \
-#     ${PROFILES}                                 \
-#     up --remove-orphans
+docker compose -f ./compose/${COMPOSE_FILENAME} down &&     \
+    docker compose -f ./compose/${COMPOSE_FILENAME}         \
+    ${PROFILES}                                             \
+    up --remove-orphans
 
-docker compose -f ./compose/${COMPOSE_FILENAME} ${PROFILES} up --remove-orphans
