@@ -124,7 +124,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8501:8501
-    profiles: ['dashboard', 'all']
+    profiles: ['dashboard']
 
 volumes:
   hbot-gateway-certs:
