@@ -8,31 +8,29 @@ help()
     echo "
 Usage: ./start_core.sh [ --no-gw ]
                        [ --no-mqtt ]
-                       [ --no-db ]
-                       [ --no-obs ]
-                       [ --no-analysis ]
-                       [ --no-tv ]
+                       [ --db ]
+                       [ --tv ]
                        [ -h | --help ]"
     exit 2
 }
 
 SHORT=h
-LONG=no-gw,no-db,no-mqtt,no-obs,no-analysis,no-tv,help
+LONG=no-gw,db,no-mqtt,tv,help
 OPTS=$(getopt -a -n rm_bot.sh --options $SHORT --longoptions $LONG -- "$@")
 
 VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
 
 eval set -- "$OPTS"
 
+EXCLUDE_DB=1
+EXCLUDE_TRADINGVIEW=1
+EXCLUDE_DASHBOARD=1
+
 while :
 do
   case "$1" in
-    --no-analysis )
-      EXCLUDE_DASHBOARD=1
-      shift;
-      ;;
-    --no-db )
-      EXCLUDE_DB=1
+    --db )
+      unset EXCLUDE_DB
       shift;
       ;;
     --no-gw )
@@ -43,8 +41,8 @@ do
       EXCLUDE_MQTT=1
       shift;
       ;;
-    --no-tv )
-      EXCLUDE_TRADINGVIEW=1
+    --tv )
+      unset EXCLUDE_TRADINGVIEW
       shift;
       ;;
     -h | --help)

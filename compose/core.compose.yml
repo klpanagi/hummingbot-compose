@@ -18,7 +18,7 @@ services:
       - hbot-db-data:/var/lib/postgresql/data/pgdata
     networks:
       - hbotnet
-    profiles: ['db', 'all']
+    profiles: ['db']
 
   gateway:
     image: hummingbot/gateway:latest
@@ -109,7 +109,7 @@ services:
       hbotnet:
         aliases:
         - tv-mqtt-bridge.local
-    profiles: ['tradingview', 'all']
+    profiles: ['tradingview']
 
   dashboard:
     image: hummingbot/dashboard:latest
