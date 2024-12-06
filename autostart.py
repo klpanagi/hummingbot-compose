@@ -28,11 +28,11 @@ BOTS = [
         "123",
         "conf_pure_mm_far-usdt-gio.yml"
     ),
-    # BotConfig(
-    #     "XCAD-USDT-KC",
-    #     "123",
-    #     "conf_pure_mm_xcad-usdt-kc.yml"
-    # ),
+    BotConfig(
+        "XCAD-USDT-GIO",
+        "123",
+        "conf_pure_mm_xcad-usdt-gio.yml"
+    ),
     # BotConfig(
     #     "XDC-USDT-GIO",
     #     "123",
@@ -43,5 +43,4 @@ BOTS = [
 
 if __name__ == "__main__":
     for bot in BOTS:
-        print(bot)
         call(bot.to_start_cmd(), shell=True)

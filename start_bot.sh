@@ -103,6 +103,7 @@ fi
 
 
 HBOT_ID=${HBOT_ID} HBOT_PSK=${HBOT_PSK} HBOT_FILE=${HBOT_FILE}  \
+    HBOT_IMAGE=${HBOT_IMAGE}                                    \
     docker compose -f ./compose/${COMPOSE_FILE_NAME} run        \
     --rm                                                        \
     ${DETACH_CONTAINER}                                         \

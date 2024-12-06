@@ -1,81 +1,28 @@
-version: '3.9'
-name: hummingbot
-
+version: "3.9"
 services:
   hbot:
     container_name: hbot-${HBOT_ID}
     image: ${HBOT_IMAGE:-"hummingbot/hummingbot:latest"}
     volumes:
-      - hbot-conf:/home/hummingbot/conf
-      - hbot-connectors-global:/home/hummingbot/conf/connectors
-      - hbot-strategies-global:/home/hummingbot/conf/strategies
-      - hbot-logs:/home/hummingbot/logs
-      - hbot-data:/home/hummingbot/data
-      - hbot-scripts-global:/home/hummingbot/scripts
-      - hbot-gateway-certs:/home/hummingbot/certs
-    environment:
-      - CONFIG_PASSWORD=${HBOT_PSK}
-      - CONFIG_FILE_NAME=${HBOT_FILE}
-      - CERTS_FOLDER="/home/hummingbot/certs"
-      - GATEWAY_CONF_FOLDER="/gateway-conf"
-      - GATEWAY_LOGS_FOLDER="/logs"
-      - PYTHONUNBUFFERED=1
-    network_mode: "host"
-    # networks:
-    #   - hbotnet
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    restart: unless-stopped
-    mem_limit: ${HBOT_MEM_LIMIT:-1000}m
-    mem_reservation: ${HBOT_MEM_RESERVATION:-300}m
+      - ./conf:/home/hummingbot/conf
+      - ./conf/connectors:/home/hummingbot/conf/connectors
+      - ./conf/strategies:/home/hummingbot/conf/strategies
+      - ./conf/controllers:/home/hummingbot/conf/controllers
+      - ./conf/scripts:/home/hummingbot/conf/scripts
+      - ./logs:/home/hummingbot/logs
+      - ./data:/home/hummingbot/data
+      - ./certs:/home/hummingbot/certs
+      # - ./scripts:/home/hummingbot/scripts
+      # - ./controllers:/home/hummingbot/controllers
     logging:
       driver: "json-file"
       options:
-        max-size: "100m"
-        max-file: 5
-
-volumes:
-  hbot-data:
-    name: hbot-${HBOT_ID}-data
-    driver: local
-    driver_opts: {}
-  hbot-conf:
-    name: hbot-${HBOT_ID}-conf
-    driver: local
-    driver_opts: {}
-  hbot-logs:
-    name: hbot-${HBOT_ID}-logs
-    driver: local
-    driver_opts: {}
-  hbot-scripts:
-    name: hbot-${HBOT_ID}-scripts
-    driver: local
-    driver_opts: {}
-  hbot-pmmscripts:
-    name: hbot-${HBOT_ID}-pmmscripts
-    driver: local
-    driver_opts: {}
-
-  hbot-connectors-global:
-    name: hbot-conf-connectors
-    driver: local
-    driver_opts: {}
-
-  hbot-strategies-global:
-    name: hbot-conf-strategies
-    driver: local
-    driver_opts: {}
-
-  hbot-scripts-global:
-    name: hbot-conf-scripts
-    driver: local
-    driver_opts: {}
-
-  hbot-gateway-certs:
-    external: true
-
-networks:
-  hbotnet:
-    name: hbotnet
-    driver: bridge
-    external: true
+        max-size: "10m"
+        max-file: "5"
+    tty: true
+    stdin_open: true
+    network_mode: host
+    #  environment:
+    #    - CONFIG_PASSWORD=a
+    #    - CONFIG_FILE_NAME=simple_pmm_example.py
+    #    - SCRIPT_CONFIG=conf_simple_pmm_example.yaml

@@ -65,3 +65,8 @@ debug.log
 .debug_console_ssh_host_key
 
 .env
+
+compose/data
+compose/logs
+compose/conf
+compose/gateway_files

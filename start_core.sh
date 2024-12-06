@@ -3,6 +3,11 @@
 COMPOSE_FILENAME="core.compose.yml"
 ENV_FILE=".env"
 
+EXCLUDE_DB=1
+EXCLUDE_TRADINGVIEW=1
+EXCLUDE_DASHBOARD=1
+EXCLUDE_MQTT=1
+
 help()
 {
     echo "
@@ -16,15 +21,12 @@ Usage: ./start_core.sh [ --no-gw ]
 
 SHORT=h
 LONG=no-gw,db,no-mqtt,tv,help
-OPTS=$(getopt -a -n rm_bot.sh --options $SHORT --longoptions $LONG -- "$@")
+OPTS=$(getopt -a -n start_core.sh --options $SHORT --longoptions $LONG -- "$@")
 
 VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
 
 eval set -- "$OPTS"
 
-EXCLUDE_DB=1
-EXCLUDE_TRADINGVIEW=1
-EXCLUDE_DASHBOARD=1
 
 while :
 do
@@ -111,5 +113,6 @@ Starting Hummingbot Core...
 docker compose -f ./compose/${COMPOSE_FILENAME} down &&     \
     docker compose -f ./compose/${COMPOSE_FILENAME}         \
     ${PROFILES}                                             \
-    up --remove-orphans
+    up --remove-orphans                                     \
+    -d
 
