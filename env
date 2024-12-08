@@ -2,7 +2,7 @@
 GW_IMAGE="hummingbot/gateway:latest"
 GW_PORT=15888
 GW_DOCS_PORT=8080
-GW_PASSPHRASE=123
+GW_PASSPHRASE="GATEWAY_PASSPHRASE"
 
 ## Database
 DB_IMAGE="postgres:13"
@@ -11,7 +11,8 @@ DB_USER=postgres
 DB_PASSWORD=postgres
 
 ## Hummingbot instances
-HBOT_IMAGE="hummingbot/hummingbot:latest"
+HBOT_IMAGE="hummingbot/hummingbot:development"
+# HBOT_IMAGE="hummingbot/hummingbot:latest"
 HBOT_COMPOSE_FILE=./hbot.compose.yml
 HBOT_MEM_LIMIT=1000
 HBOT_MEM_RESERVATION=300
@@ -22,8 +23,9 @@ GRAFANA_DASHBOARD_PORT=3000
 
 # TradingView MQTT Bridge
 TV_BRIDGE_IMAGE="klpanagi/tradingview-mqtt-bridge:latest"
-TV_BRIDGE_SEC_KEY=123123
+TV_BRIDGE_SEC_KEY="TradingView_SECURITY_KEY_HERE"
 TV_BRIDGE_MQTT_TOPIC="tradingview/alerts"
+TV_BRIDGE_WORKERS=2
 
 # Streamlit App
 DASHBOARD_IMAGE="hummingbot/dashboard:latest"

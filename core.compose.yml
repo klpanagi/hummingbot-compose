@@ -3,15 +3,15 @@ name: hummingbot-core
 services:
 
   db:
-    image: ${DB_IMAGE:-postgres:13}
+    image: ${DB_IMAGE}
     container_name: hbot-db
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=${DB_NAME:-postgres}
-      - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - hbot-db-data:/var/lib/postgresql/data/pgdata
@@ -21,7 +21,7 @@ services:
 
   gateway:
     container_name: hbot-gateway
-    image: ${GW_IMAGE:-hummingbot/gateway:latest}
+    image: ${GW_IMAGE}
     restart: always
     ports:
       - ${GW_DOCS_PORT:-8080}:8080
@@ -32,7 +32,7 @@ services:
       - "./gateway_files/db:/home/gateway/db"
       - "./certs:/home/gateway/certs"
     environment:
-      - GATEWAY_PASSPHRASE=${GW_PASSPHRASE:-123}
+      - GATEWAY_PASSPHRASE=${GW_PASSPHRASE}
     networks:
       hbotnet:
         aliases:
@@ -40,7 +40,7 @@ services:
     profiles: ['gateway', 'all']
 
   emqx1:
-    image: ${MQTT_EMQX_IMAGE:-emqx:5}
+    image: ${MQTT_EMQX_IMAGE}
     restart: unless-stopped
     container_name: hbot-emqx-1
     environment:
@@ -83,16 +83,16 @@ services:
     ports:
       - '8082:8080'
     environment:
-      - SEC_KEY=${TV_BRIDGE_SEC_KEY:-123123}
+      - SEC_KEY=${TV_BRIDGE_SEC_KEY}
       - MQTT_HOST=node1.emqx.local
       - MQTT_PORT=1883
       - MQTT_USERNAME=
       - MQTT_PASSWORD=
-      - MQTT_TOPIC=${TV_BRIDGE_MQTT_TOPIC:-tradingview/alerts}
+      - MQTT_TOPIC=${TV_BRIDGE_MQTT_TOPIC}
     command: [
       "uvicorn",
       "app:app",
-      "--workers", "${TV_BRIDGE_WORKERS:-2}",
+      "--workers", "${TV_BRIDGE_WORKERS}",
       "--host", "0.0.0.0",
       "--port", "8080",
       '--root-path', '']

@@ -5,8 +5,7 @@ ENV_FILE=".env"
 
 EXCLUDE_DB=1
 EXCLUDE_TRADINGVIEW=1
-EXCLUDE_DASHBOARD=1
-EXCLUDE_MQTT=1
+# EXCLUDE_MQTT=1
 
 help()
 {
@@ -72,9 +71,6 @@ fi
 if [ -z $EXCLUDE_MQTT ]; then
  PROFILES="${PROFILES} --profile mqtt"
 fi
-if [ -z $EXCLUDE_DASHBOARD ]; then
- PROFILES="${PROFILES} --profile dashboard"
-fi
 if [ -z $EXCLUDE_TRADINGVIEW ]; then
  PROFILES="${PROFILES} --profile tradingview"
 fi
@@ -104,10 +100,6 @@ Starting Hummingbot Core...
     - Image: ${TV_BRIDGE_IMAGE}
     - Security Key: ${TV_BRIDGE_SEC_KEY}
     - MQTT Topic: ${TV_BRIDGE_MQTT_TOPIC}
-
-    Dashboard Parameters:
-    - Image: ${DASHBOARD_IMAGE}
-    - Port: ${DASHBOARD_PORT}
 """
 
 docker compose -f ./compose/${COMPOSE_FILENAME} down &&     \
