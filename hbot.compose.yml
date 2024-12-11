@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   hbot:
     container_name: hbot-${HBOT_ID}
@@ -22,7 +21,7 @@ services:
     tty: true
     stdin_open: true
     network_mode: host
-    environment:
-      - CONFIG_PASSWORD="BOT_PASSWORD"
-    #    - CONFIG_FILE_NAME=simple_pmm_example.py
-    #    - SCRIPT_CONFIG=conf_simple_pmm_example.yaml
+    # environment:
+      # - CONFIG_PASSWORD="123"
+      # - CONFIG_FILE_NAME=simple_pmm_example.py
+      # - SCRIPT_CONFIG=conf_simple_pmm_example.yaml

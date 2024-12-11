@@ -70,3 +70,8 @@ compose/data
 compose/logs
 compose/conf
 compose/gateway_files
+data/
+conf/
+gateway_files/
+certs/
+logs/
