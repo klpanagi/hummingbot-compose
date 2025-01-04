@@ -102,9 +102,9 @@ Starting Hummingbot Core...
     - MQTT Topic: ${TV_BRIDGE_MQTT_TOPIC}
 """
 
-docker compose -f ./compose/${COMPOSE_FILENAME} down &&     \
-    docker compose -f ./compose/${COMPOSE_FILENAME}         \
-    ${PROFILES}                                             \
-    up --remove-orphans                                     \
+docker compose -f ${COMPOSE_FILENAME} down &&     \
+    docker compose -f ${COMPOSE_FILENAME}         \
+    ${PROFILES}                                   \
+    up --remove-orphans                           \
     -d
 
